@@ -25,8 +25,8 @@ See requirements.txt for full dependencies
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/rpuc.git
-cd rpuc
+git clone https://github.com/degun-osint/RhinoUserChecker
+cd RhinoUserChecker
 ```
 
 2. Create a virtual environment and activate it:
