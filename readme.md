@@ -11,7 +11,7 @@ A Python-based OSINT tool that helps you find usernames across multiple platform
 - **External Link Analysis**: Discover related profiles through external link analysis
 - **Smart Rate Limiting**: Built-in proxy support and smart rate limiting to avoid blocking
 - **Rich Console Output**: Real-time progress tracking and beautiful console output using Rich
-- **HTML Report Generation**: Generate detailed HTML reports with all findings
+- **HTML or CSV Report Generation**: Generate detailed HTML or CSV reports with all findings
 - **International Platform Support**: Special handling for international platforms (Russian, Chinese, Japanese, etc.)
 
 ## 📋 Requirements
