@@ -621,11 +621,12 @@ async def main():
         checker = SiteChecker()
         await checker.download_sites_data()
         
+        username = input("\nEnter username to search: ")
+        
         while True:
-            username = input("\nEnter username to search: ")
-            
             if not username.strip():
                 print("Username cannot be empty")
+                username = input("\nEnter username to search: ")
                 continue
                 
             print(f"\nSearching profiles for {username}...")
@@ -654,16 +655,16 @@ async def main():
                     print(f"CSV results exported to {output_path_csv}")
             
             # Ask to search another user
-            continue_search = input("\nSearch another user? (enter alias or ctrl-c to quit): ")
-            if not continue_search.strip():
+            username = input("\nSearch another user? (enter alias or ctrl-c to quit): ")
+            if not username.strip():
                 break
-            username = continue_search  # Use the entered alias for the next search
             
     except KeyboardInterrupt:
         print("\nOperation cancelled by user...")
     except asyncio.CancelledError:
         print("\nOperation cancelled...")
     except Exception as e:
+        print(f"An error occurred: {str(e)}")
         print(f"An error occurred: {str(e)}")
 
 def run():
