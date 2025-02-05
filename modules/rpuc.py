@@ -134,24 +134,36 @@ class SiteChecker:
                 if initial_status == site['m_code'] and site['m_code'] != site['e_code']:
                     return None
 
-                if initial_status == site['e_code'] and has_expected_string:
-                    if not (site['m_code'] == site['e_code'] and has_miss_string):
-                        # Analyze external links and extract profile info if profile is found
+                if initial_status == site['e_code']:
+                    # Case où on a trouvé le profil avec certitude
+                    if has_expected_string:
+                        if not (site['m_code'] == site['e_code'] and has_miss_string):
+                            external_links = analyze_links(content, original_url)
+                            profile_info = extract_profile_info(content, original_url)
+                            return {
+                                'name': site['name'],
+                                'category': site['cat'],
+                                'url': display_url,
+                                'status': 'found',
+                                'http_code': initial_status,
+                                'external_links': external_links,
+                                'profile_info': profile_info
+                            }
+                    # Nouveau cas "unsure" : on a le bon code mais pas la string attendue
+                    elif site['m_code'] == 404: # On vérifie que c'est bien un cas où on attendait un 404 pour les non-trouvés
                         external_links = analyze_links(content, original_url)
                         profile_info = extract_profile_info(content, original_url)
-                        
                         return {
                             'name': site['name'],
                             'category': site['cat'],
                             'url': display_url,
-                            'status': 'found',
+                            'status': 'unsure',
                             'http_code': initial_status,
                             'external_links': external_links,
                             'profile_info': profile_info
                         }
 
                 return None
-
         except Exception as e:
             logger.error(f"Error checking {site['name']}: {str(e)}")
             return None
@@ -242,10 +254,11 @@ class SiteChecker:
         table.add_column("Profile Info", style="white")
         
         for result in self.results:
+            status_style = "green" if result['status'] == 'found' else "yellow" if result['status'] == 'unsure' else "white"
+            
             external_links = result.get('external_links', [])
             links_str = ", ".join(external_links) if external_links else "-"
             
-            # Format profile info
             profile_info = result.get('profile_info', {})
             profile_str = ""
             if profile_info:
@@ -257,13 +270,12 @@ class SiteChecker:
             table.add_row(
                 result['name'],
                 result['category'],
-                result['status'],
+                f"[{status_style}]{result['status']}[/{status_style}]",
                 result['url'],
                 links_str,
                 profile_str or "-"
             )
-        
-        self.console.print(table)
+            self.console.print(table)
 
     def export_html(self, output_file: str, username: str = ""):
         """Export results to HTML."""
@@ -507,8 +519,9 @@ class SiteChecker:
                         <table class="results-table">
                             <thead>
                                 <tr>
-                                    <th><i class="fas fa-globe icon"></i>Site</th>
+                                    <th><strong><i class="fas fa-globe icon"></i>Site</strong></th>
                                     <th><i class="fas fa-tag icon"></i>Category</th>
+                                    <th><i class="fas fa-info-circle icon"></i>Status</th>
                                     <th><i class="fas fa-link icon"></i>URL</th>
                                     <th><i class="fas fa-external-link-alt icon"></i>External Links</th>
                                     <th><i class="fas fa-user-circle icon"></i>Profile Information</th>
@@ -518,6 +531,9 @@ class SiteChecker:
                                 {% for result in results %}
                                 <tr>
                                     <td>{{ result.name }}</td>
+                                    <td style="color: {% if result.status == 'found' %}var(--success){% elif result.status == 'unsure' %}#FFA500{% else %}var(--text-gray){% endif %}">
+                                        {{ result.status }}
+                                    </td>
                                     <td>{{ result.category }}</td>
                                     <td class="external-links">
                                         <a href="{{ result.url }}" target="_blank" ><i class="fas fa-external-link-alt icon"></i>{{ result.url }}</a>

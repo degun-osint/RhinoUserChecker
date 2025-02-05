@@ -62,14 +62,15 @@ The tool will:
 1. Download the latest site data from WhatsMyName project
 2. Prompt you for a username to search
 3. Search across hundreds of platforms
-4. Generate an HTML report with findings
+4. Generate an HTML or a CSV report with findings
 
 ## 📊 Output
 
 RPUC generates two types of output:
 - Real-time console output with progress tracking
-- Detailed HTML report containing:
+- Detailed HTML or CSV report containing:
   - Found profiles with links
+  - Status (found = good chance profile exists, unsure = good http [200] code when a 404 was expected if profile does not exists, but can't confirm the profile)
   - Extracted profile information
   - Discovered external links
   - Metadata from profiles
