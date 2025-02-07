@@ -14,6 +14,10 @@ A Python-based OSINT tool that helps you find usernames across multiple platform
 - **HTML or CSV Report Generation**: Generate detailed HTML or CSV reports with all findings
 - **International Platform Support**: Special handling for international platforms (Russian, Chinese, Japanese, etc.)
 
+## Discussion
+
+You can join the OSCAR ZULU discord server to discuss about this tool : https://discord.gg/4REgJzn4NG
+
 ## 📋 Requirements
 
 ```text
