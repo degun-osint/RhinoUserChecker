@@ -3,3 +3,5 @@
 /.vscode
 /data
 /results
+modules/__pycache__/*
+modules/.DS_Store
