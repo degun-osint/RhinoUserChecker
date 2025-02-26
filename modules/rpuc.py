@@ -678,23 +678,6 @@ class SiteChecker:
                     <body>
                         <div class="container">
                             <header class="header">
-                                <pre class="ascii-art">
-                                .-----------------------------------------.
-                               ( RHINO USER CHECKER - OSCAR ZULU FOREVER ! )
-                            //\'------------------------------------------'\
-                            /      , _.-~~-.__            __.,----.
-                        (';    __( )         ~~~'--..--~~         '.
-                    (    . ""..-'  ')|                     .       \  '.
-                    \\. |\'.'                    ;       .  ;       ;   ;
-                    \ \"   /9)                 '       .  ;           ;
-                    ; )           )    (        '       .  ;     '    .
-                        )    _  __.-'-._   ;       '       . ,     /\    ;
-                        '-"'--'      ; "-. '.    '            _.-(  ".  (
-                                    ;    \,)    )--,..----';'    >  ;   .
-                                    \   ( |   /           (    /   .   ;
-                        ,   ,          )  | ; .(      .    , )  /     \  ;
-                    ,;'PjP;.';-.;._,;/;,;)/;.;.);.;,,;,;,,;/;;,),;.,/,;.).,;
-                                </pre>
                                 <h1>Rhino User Checker Results</h1>
                                 <h2 style="color: var(--highlight); margin-bottom: 1rem;">Results for: {{ username }}</h2>
                                 <div class="timestamp"><i class="far fa-clock icon"></i>Generated on {{ timestamp }}</div>
