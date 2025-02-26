@@ -8,6 +8,7 @@ A Python-based OSINT tool that helps you find usernames across multiple platform
 
 - **Multi-platform Search**: Search for usernames across hundreds of social media platforms and websites thanks to WhatMyName JSON file
 - **Profile Information Extraction**: Automatically extract user profile information, bios, and metadata
+- **Profile creation date**: Attempt to find account creation date
 - **External Link Analysis**: Discover related profiles through external link analysis
 - **Smart Rate Limiting**: Built-in proxy support and smart rate limiting to avoid blocking
 - **Rich Console Output**: Real-time progress tracking and beautiful console output using Rich
@@ -87,6 +88,7 @@ rpuc/
 ├── modules/
 │   ├── proxy.py        # Proxy server for rate limiting
 │   ├── rpuc.py         # Core functionality
+│   ├── date_extractor.py  # date search
 │   ├── link_analyzer.py # External link analysis
 │   └── profile_extractor.py # Profile information extraction
 ├── data/               # Data storage
