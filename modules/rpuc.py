@@ -150,57 +150,61 @@ class SiteChecker:
                 has_miss_string = await self.verify_content(content, site.get('m_string', ''), site['name'])
                 has_expected_string = await self.verify_content(content, site.get('e_string', ''), site['name'])
 
-                # Verification logic
-                if initial_status == site['m_code'] and site['m_code'] != site['e_code']:
+                # Cas 1: Si m_string est présent et m_code correspond => Non trouvé
+                if has_miss_string and initial_status == site['m_code']:
+                    return None
+                
+                # Cas 2: Si e_string est présent et e_code correspond => Found
+                if has_expected_string and initial_status == site['e_code']:
+                    external_links = analyze_links(content, original_url)
+                    profile_info = extract_profile_info(content, original_url)
+                    
+                    # Extraire la date de création du profil
+                    profile_date = None
+                    if profile_info and 'metadata' in profile_info:
+                        profile_date = extract_profile_date(content, profile_info.get('metadata', {}), site_name=site['name'])
+                    
+                    # Déterminer le statut (date de création ou "found")
+                    status = 'found'
+                    if profile_date:
+                        status = normalize_date(profile_date)
+                        
+                    # Vérifier si le contenu provient d'une balise link rel (à ignorer)
+                    if status != 'found' and "<link rel=" in content and re.search(r'<link\s+rel=["\'].*?\b' + re.escape(status) + r'\b.*?["\']', content, re.IGNORECASE):
+                        status = 'found'
+                    
+                    return {
+                        'name': site['name'],
+                        'category': site['cat'],
+                        'url': display_url,
+                        'status': status,
+                        'http_code': initial_status,
+                        'external_links': external_links,
+                        'profile_info': profile_info
+                    }
+                
+                # Cas 3: Si e_string est présent mais e_code ne correspond pas => Unsure
+                if has_expected_string and initial_status != site['e_code']:
+                    external_links = analyze_links(content, original_url)
+                    profile_info = extract_profile_info(content, original_url)
+                    
+                    return {
+                        'name': site['name'],
+                        'category': site['cat'],
+                        'url': display_url,
+                        'status': 'unsure',
+                        'http_code': initial_status,
+                        'external_links': external_links,
+                        'profile_info': profile_info
+                    }
+                
+                # Cas 4: Si ni e_string ni m_string ne sont présents => Non trouvé
+                if not has_expected_string and not has_miss_string:
                     return None
 
-                if initial_status == site['e_code']:
-                    # Case où on a trouvé le profil avec certitude
-                    if has_expected_string:
-                        if not (site['m_code'] == site['e_code'] and has_miss_string):
-                            external_links = analyze_links(content, original_url)
-                            profile_info = extract_profile_info(content, original_url)
-                            
-                            # Extraire la date de création du profil
-                            profile_date = None
-                            if profile_info and 'metadata' in profile_info:
-                                profile_date = extract_profile_date(content, profile_info.get('metadata', {}), site_name=site['name'])
-                            
-                            # Déterminer le statut (date de création ou "found")
-                            status = 'found'
-                            if profile_date:
-                                status = normalize_date(profile_date)
-                                
-                            # Vérifier si le contenu provient d'une balise link rel (à ignorer)
-                            if status != 'found' and "<link rel=" in content and re.search(r'<link\s+rel=["\'].*?\b' + re.escape(status) + r'\b.*?["\']', content, re.IGNORECASE):
-                                status = 'found'
-                            
-                            return {
-                                'name': site['name'],
-                                'category': site['cat'],
-                                'url': display_url,
-                                'status': status,  # Utiliser la date si disponible
-                                'http_code': initial_status,
-                                'external_links': external_links,
-                                'profile_info': profile_info
-                            }
-                    # Nouveau cas "unsure" : on a le bon code mais pas la string attendue
-                    elif site['m_code'] == 404:  # On vérifie que c'est bien un cas où on attendait un 404 pour les non-trouvés
-                        external_links = analyze_links(content, original_url)
-                        profile_info = extract_profile_info(content, original_url)
-                        
-                        # Ne pas extraire de date pour les profils "unsure"
-                        return {
-                            'name': site['name'],
-                            'category': site['cat'],
-                            'url': display_url,
-                            'status': 'unsure',  # Toujours garder "unsure"
-                            'http_code': initial_status,
-                            'external_links': external_links,
-                            'profile_info': profile_info
-                        }
-
+                # Pour tout autre cas non prévu => Non trouvé
                 return None
+                    
         except Exception as e:
             logger.error(f"Error checking {site['name']}: {str(e)}")
             return None
