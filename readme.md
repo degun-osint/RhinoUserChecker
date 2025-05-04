@@ -47,13 +47,59 @@ pip install -r requirements.txt
 
 ## ⚙️ Configuration
 
-RPUC uses environment variables for configuration. Create a `.env` file in the root directory with:
+RPUC uses environment variables for configuration. Create a `.env` based on .env-sample file in the root directory with:
 
 ```env
 WMN_JSON_URL=https://raw.githubusercontent.com/WebBreacher/WhatsMyName/main/wmn-data.json
 PROXY_URL=http://127.0.0.1:8000/proxy
 ```
 By default, the script uses a forked version of WMN JSON.
+
+## 🐳 Docker Installation
+
+### Using Docker Compose (recommended)
+
+1. Clone the repository:
+```bash
+git clone https://github.com/degun-osint/RhinoUserChecker
+cd RhinoUserChecker
+```
+
+2. Run the application:
+```bash
+docker-compose up -d
+```
+
+3. Attach to the running container to interact with the application:
+```bash
+docker attach rhino-user-checker
+```
+
+4. To exit the application, press `Ctrl+C` and then to detach from the container without stopping it, press `Ctrl+P` followed by `Ctrl+Q`
+
+### Using Docker directly
+
+1. Build the Docker image:
+```bash
+docker build -t rhino-user-checker .
+```
+
+2. Run the container:
+```bash
+docker run -it --name rhino-user-checker -v $(pwd)/data:/app/data -v $(pwd)/results:/app/results rhino-user-checker
+```
+
+The application creates two directories:
+- `./data`: Stores the WhatsMyName database
+- `./results`: Stores exported results (HTML and CSV)
+
+These directories are mounted as volumes to persist data between container runs.
+
+### Docker Troubleshooting
+
+If you encounter any issues with Docker:
+2. Check that the volumes have the correct permissions
+3. If you're having network issues, ensure your Docker container has internet access
 
 ## 🎮 Usage
 
@@ -129,3 +175,5 @@ This tool is for educational purposes only. Be mindful of the platforms' terms o
 ## Author
 
 DEGUN (https://github.com/degun-osint)
+
+
