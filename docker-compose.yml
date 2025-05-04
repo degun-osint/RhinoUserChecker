@@ -1,0 +1,12 @@
+services:
+  rhino-user-checker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rhino-user-checker
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+    stdin_open: true  # Keep STDIN open even if not attached
+    tty: true         # Allocate a pseudo-TTY
+    restart: "no"     # Don't restart automatically
